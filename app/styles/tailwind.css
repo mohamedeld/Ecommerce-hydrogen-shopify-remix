@@ -4,3 +4,25 @@
  */
 
 @import 'tailwindcss';
+
+@theme {
+  --color-navy: #1a2a3a;
+  --color-cream: #f5f2ea;
+  --color-gold: #c3a343;
+  --color-gray: #8c8c8c;
+
+  --font-playfair: 'Playfair Display', serif;
+  --font-open-sans: 'Open Sans Pro', sans-serif;
+}
+
+.nav-link-base {
+  @apply relative inline-block no-underline transition-all duration-200 hover:text-gold font-open-sans hover:no-underline font-semibold;
+}
+
+.nav-link-base::after {
+  @apply content-[''] absolute -bottom-1 left-0 w-0 h-[1px] bg-gold transition-all duration-200 ease-in-out;
+}
+
+.nav-link-base:hover::after {
+  @apply w-full;
+}

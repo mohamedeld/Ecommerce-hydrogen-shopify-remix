@@ -27,6 +27,7 @@ export function AddToCartButton({
             type="submit"
             onClick={onClick}
             disabled={disabled ?? fetcher.state !== 'idle'}
+            className="w-full flex items-center justify-center h-[40px] rounded-full bg-navy text-white hover:bg-navy-light"
           >
             {children}
           </button>

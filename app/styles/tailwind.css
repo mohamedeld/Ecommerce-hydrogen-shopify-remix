@@ -7,8 +7,10 @@
 
 @theme {
   --color-navy: #1a2a3a;
+  --color-navy-light: #2a3a4a;
   --color-cream: #f5f2ea;
   --color-gold: #c3a343;
+  --color-gold-dark: #b39333;
   --color-gray: #8c8c8c;
 
   --font-playfair: 'Playfair Display', serif;

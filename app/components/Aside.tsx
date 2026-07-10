@@ -61,14 +61,14 @@ export function Aside({
       aria-labelledby={id}
     >
       <button className="close-outside" onClick={close} />
-      <aside>
+      <aside className="flex flex-col">
         <header>
           <h3 id={id}>{heading}</h3>
           <button className="close reset" onClick={close} aria-label="Close">
             &times;
           </button>
         </header>
-        <main>{children}</main>
+        <main className="flex-1 overflow-y-auto flex">{children}</main>
       </aside>
     </div>
   );

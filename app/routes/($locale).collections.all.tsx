@@ -4,6 +4,11 @@ import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {ProductItem} from '~/components/ProductItem';
 import type {CollectionItemFragment} from 'storefrontapi.generated';
+import {HeroSection} from '~/components/HeroSection';
+import {CollectionNavigation} from '~/components/CollectionNavigation';
+import {ProductGid} from '~/components/ProductGid';
+import {CraftedMaster} from '~/components/CraftedMaster';
+import {HertiageBanner} from '~/components/HertiageBanner';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: `Hydrogen | Products`}];
@@ -51,20 +56,12 @@ export default function Collection() {
   const {products} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collection">
-      <h1>Products</h1>
-      <PaginatedResourceSection<CollectionItemFragment>
-        connection={products}
-        resourcesClassName="products-grid"
-      >
-        {({node: product, index}) => (
-          <ProductItem
-            key={product.id}
-            product={product}
-            loading={index < 8 ? 'eager' : undefined}
-          />
-        )}
-      </PaginatedResourceSection>
+    <div className="collection pt-28">
+      <HeroSection isHome={false} imgUrl="/images/man.png" />
+      <CollectionNavigation length={products.nodes.length} />
+      <ProductGid products={products} />
+      <CraftedMaster />
+      <HertiageBanner />
     </div>
   );
 }

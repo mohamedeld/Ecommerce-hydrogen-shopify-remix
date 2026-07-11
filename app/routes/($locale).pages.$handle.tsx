@@ -1,6 +1,7 @@
 import {useLoaderData} from 'react-router';
 import type {Route} from './+types/pages.$handle';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {HeroSection} from '~/components/HeroSection';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [{title: `Hydrogen | ${data?.page.title ?? ''}`}];
@@ -58,11 +59,50 @@ export default function Page() {
   const {page} = useLoaderData<typeof loader>();
 
   return (
-    <div className="page">
-      <header>
+    <div className="min-h-screen py-24 md:py-32">
+      <section className="bg-navy py-24 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="flex flex-col gap-6">
+            <h1 className="font-playfair text-2xl md:text-3xl! my-0! text-white">
+              {page.title}
+            </h1>
+            {page?.subtitle?.value && (
+              <div
+                className="font-open-sans text-lg text-cream"
+                dangerouslySetInnerHTML={{
+                  __html: page?.subtitle?.value ?? '',
+                }}
+              />
+            )}
+          </div>
+        </div>
+      </section>
+      <section className="py-20 md:py-28 bg-white">
+        <div className="container mx-auto">
+          <div className="max-w-none">
+            <div className="font-open-sans text-navy/80 text-lg md:text-xl leading-relaxed">
+              {page?.introText?.value && (
+                <div
+                  className="mb-16"
+                  dangerouslySetInnerHTML={{
+                    __html: page?.introText?.value ?? '',
+                  }}
+                />
+              )}
+            </div>
+            <main
+              className="font-open-sans bg-navy/80 text-white!"
+              dangerouslySetInnerHTML={{
+                __html: page.body,
+              }}
+            />
+          </div>
+        </div>
+      </section>
+      {/* <header>
         <h1>{page.title}</h1>
       </header>
-      <main dangerouslySetInnerHTML={{__html: page.body}} />
+      <main dangerouslySetInnerHTML={{__html: page.body}} /> */}
     </div>
   );
 }
@@ -82,6 +122,18 @@ const PAGE_QUERY = `#graphql
       seo {
         description
         title
+      }
+      subtitle:metafield(namespace: "custom", key: "subtitle") {
+        value
+      }
+      introText:metafield(namespace: "custom", key: "intro_text") {
+        value
+      }
+      ctaContent:metafield(namespace: "custom", key: "cta_content") {
+        value
+      }
+      ctaButtonText:metafield(namespace: "custom", key: "cta_button_text") {
+        value
       }
     }
   }

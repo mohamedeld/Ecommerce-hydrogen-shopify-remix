@@ -12,6 +12,8 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {RichText} from '@shopify/hydrogen';
+import {ChevronDown} from 'lucide-react';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [
@@ -98,27 +100,91 @@ export default function Product() {
   const {title, descriptionHtml} = product;
 
   return (
-    <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <div className="product-main">
-        <h1>{title}</h1>
-        <ProductPrice
-          price={selectedVariant?.price}
-          compareAtPrice={selectedVariant?.compareAtPrice}
-        />
-        <br />
-        <ProductForm
-          productOptions={productOptions}
-          selectedVariant={selectedVariant}
-        />
-        <br />
-        <br />
-        <p>
-          <strong>Description</strong>
-        </p>
-        <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-        <br />
+    <div className="pt-48">
+      <div className="max-w-7xl mx-auto md:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 pb-16">
+          <ProductImage
+            image={selectedVariant?.image}
+            images={product?.images?.nodes}
+          />
+          <div className="flex flex-col gap-6">
+            <h1 className="my-0! font-playfair text-3xl! md:text-4xl! lg:text-5xl! text-navy">
+              {title}
+            </h1>
+            <ProductPrice
+              price={selectedVariant?.price}
+              compareAtPrice={selectedVariant?.compareAtPrice}
+            />
+            <div className="font-open-sans text-navy/80 max-w-none">
+              <p className="font-open-sans text-navy/80 mb-2! ">
+                <strong>Description</strong>
+              </p>
+              <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+            </div>
+            <ProductForm
+              productOptions={productOptions}
+              selectedVariant={selectedVariant}
+            />
+            <div className="mt-6 border-t border-navy/10">
+              <div className="grid grid-cols-1 divide-y divide-navy/10">
+                {product?.materials?.value && (
+                  <details className="group py-6">
+                    <summary className="flex items-center justify-between cursor-pointer list-none">
+                      <h3 className="font-playfair text-lg text-navy">
+                        {' '}
+                        Material & Construction
+                      </h3>
+                      <span className="relative shrink-0 ml-4 w-4 h-4 transition-transform duration-300 group-open:rotate-180">
+                        <ChevronDown />
+                      </span>
+                    </summary>
+                    <div className="pt-4 prose font-open-sans text-navy/80">
+                      <RichText data={product?.materials?.value} />
+                      {product?.construction?.value && (
+                        <div className="mt-4">
+                          <h4 className="font-playfair text-base text-navy">
+                            Construction
+                          </h4>
+                          <p>{product?.construction?.value}</p>
+                        </div>
+                      )}
+                    </div>
+                  </details>
+                )}
+                {product?.sizingNotes?.value && (
+                  <details className="group py-6">
+                    <summary className="flex items-center justify-between cursor-pointer list-none">
+                      <h3 className="font-playfair text-lg text-navy">
+                        Size & Fit
+                      </h3>
+                      <span className="relative shrink-0 ml-4 w-4 h-4 transition-transform duration-300 group-open:rotate-180">
+                        <ChevronDown />
+                      </span>
+                    </summary>
+                    <div className="pt-4 prose font-open-sans text-navy/80">
+                      <p>{product?.sizingNotes?.value}</p>
+                    </div>
+                  </details>
+                )}
+                {product?.careInstructions?.value && (
+                  <details className="group py-6">
+                    <summary className="flex items-center justify-between cursor-pointer list-none">
+                      <h3 className="font-playfair text-lg text-navy">
+                        Care Instructions
+                      </h3>
+                      <span className="relative shrink-0 ml-4 w-4 h-4 transition-transform duration-300 group-open:rotate-180">
+                        <ChevronDown />
+                      </span>
+                    </summary>
+                    <div className="pt-4 prose font-open-sans text-navy/80">
+                      <RichText data={product?.careInstructions?.value} />
+                    </div>
+                  </details>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <Analytics.ProductView
         data={{
@@ -186,6 +252,27 @@ const PRODUCT_FRAGMENT = `#graphql
     description
     encodedVariantExistence
     encodedVariantAvailability
+    images(first: 10) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
+    careInstructions: metafield(namespace: "custom", key: "care_instructions") {
+      value
+    }
+    materials: metafield(namespace: "custom", key: "materials") {
+      value
+    }
+    construction: metafield(namespace: "custom", key: "construction") {
+      value
+    }
+    sizingNotes: metafield(namespace: "custom", key: "sizing_notes") {
+      value
+    }
     options {
       name
       optionValues {

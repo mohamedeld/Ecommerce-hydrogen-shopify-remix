@@ -85,12 +85,29 @@ const COLLECTION_ITEM_FRAGMENT = `#graphql
       width
       height
     }
+    images(first:10){
+      nodes{
+        id
+        altText
+      url
+      width
+      height
+      }
+    }
     priceRange {
       minVariantPrice {
         ...MoneyCollectionItem
       }
       maxVariantPrice {
         ...MoneyCollectionItem
+      }
+    }
+      variants(first:1){
+      nodes{
+        selectedOptions{
+          name
+          value
+        }
       }
     }
   }

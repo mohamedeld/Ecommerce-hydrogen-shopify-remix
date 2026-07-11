@@ -6,8 +6,14 @@ import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
-import {ProductItem} from '~/components/ProductItem';
+import {ProductItem, type IProduct} from '~/components/ProductItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
+import {ArrowLeft, ArrowRight, Star} from 'lucide-react';
+import {SuspenseProduct} from '~/components/SuspenseProduct';
+import {RecommendedProduct} from '~/components/RecommendedProduct';
+import {HeroSection} from '~/components/HeroSection';
+import {CraftedMaster} from '~/components/CraftedMaster';
+import {QuoteSection} from '~/components/QuoteSection';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -61,10 +67,14 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
-    <div className="home">
-      {data.isShopLinked ? null : <MockShopNotice />}
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
+    <div className="home flex flex-col gap-8">
+      {/* Hero  */}
+      <HeroSection />
+
+      {/* Recommended Products */}
+      <RecommendedProduct data={data} />
+      <CraftedMaster />
+      <QuoteSection />
     </div>
   );
 }
@@ -138,6 +148,18 @@ const FEATURED_COLLECTION_QUERY = `#graphql
       height
     }
     handle
+    products(first: 1) {
+      nodes {
+        variants(first: 1) {
+          nodes {
+            selectedOptions {
+              name
+              value
+            }
+          }
+        }
+      }
+    }
   }
   query FeaturedCollection($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
@@ -166,6 +188,23 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
       altText
       width
       height
+    }
+    images(first:2){
+      nodes{
+        id
+    url
+    altText
+    width
+    height
+      }
+    }
+    variants(first:1){
+      nodes{
+        selectedOptions{
+        name
+        value
+          }
+      }
     }
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
